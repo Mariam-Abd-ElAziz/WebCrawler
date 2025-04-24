@@ -6,82 +6,97 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.util.*;
 
-public class WebCrawler {
-    private static final int MAX_PAGES = 10;
-    private final Set<String> visitedUrls = new HashSet<>();
-    private final Queue<String> urlQueue = new LinkedList<>();
-    private int docCount = 0;
 
-    public WebCrawler(String[] seedUrls) {
-        Collections.addAll(urlQueue, seedUrls);
+
+public class WebCrawler {
+    private static final int MAX_CRAWLED_PAGES_NO = 10;
+    private final Set<String> visitedURLs = new HashSet<>();
+    private final Queue<String> URLsQueue = new LinkedList<>();
+    private int crawledPagesCount = 0;
+
+
+
+    //initialize the queue with the seeds
+    public WebCrawler(String[] seedURLs) {
+        Collections.addAll(URLsQueue, seedURLs);
     }
 
     public void startCrawling() {
-        while (!urlQueue.isEmpty() && docCount < MAX_PAGES) {
-            String currentUrl = urlQueue.poll();
+        while (!URLsQueue.isEmpty() && crawledPagesCount < MAX_CRAWLED_PAGES_NO) {
+            String currentURL = URLsQueue.poll();
 
-            if (currentUrl == null || visitedUrls.contains(currentUrl)) continue;
+            if (currentURL == null) continue;
 
             try {
-                // Respect Wikipedia's crawling delay policy
+                // Politeness: Respect Wikipedia's crawling delay policy
                 Thread.sleep(1000);
-                System.out.println("\nFetching: " + currentUrl);
 
-                Document doc = Jsoup.connect(currentUrl)
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+                System.out.println("\nFetching: " + currentURL);
+
+                //will be used in the Jsoup connection as the value of userAgent header of the http request
+                //to pretend to be a normal browser on Windows
+                //to avoid getting blocked by websites that restrict bots or scrapers.
+                String dummyBrowserName = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+                Document doc = Jsoup.connect(currentURL)
+                        .userAgent(dummyBrowserName)
                         .get();
 
-                visitedUrls.add(currentUrl);
-                docCount++;
-                System.out.println("✅ Crawled (" + docCount + "/" + MAX_PAGES + "): " + currentUrl);
+                //reflect the successful URL visit
+                visitedURLs.add(currentURL);
+                crawledPagesCount++;
+                System.out.println("✅ Crawled (" + crawledPagesCount + "/" + MAX_CRAWLED_PAGES_NO + "): " + currentURL);
 
-                // Only look at links in the main article content
-//                Elements links = doc.select("#mw-content-text a[href^='/wiki/']");
-                Elements links = doc.select("#mw-content-text a[href^='/wiki/']:not(.reference a)");
+                //get all the links in the main article content only
+                Elements linksInPage = doc.select("#mw-content-text a[href^='/wiki/']:not(.reference a)");
+                System.out.println("Found " + linksInPage.size() + " potential links");
 
-                System.out.println("Found " + links.size() + " potential links");
-                int validLinks = 0;
+                //normalize the links, then add the valid ones only to the queue
+                int validLinksNo = 0;
+                for (Element link : linksInPage) {
+                    String URL = link.absUrl("href");
+                    URL = normalizeURL(URL);
 
-                for (Element link : links) {
-                    String url = link.absUrl("href");
-                    url = normalizeUrl(url);
-
-                    if (isValidArticle(url) && !visitedUrls.contains(url)) {
-                        urlQueue.add(url);
-                        validLinks++;
-//                        System.out.println("  ➕ Valid link: " + url);
-                    } else {
-//                        System.out.println("  ❌ Invalid link: " + url);
+                    if (isValidArticle(URL) && !visitedURLs.contains(URL)) {
+                        URLsQueue.add(URL);
+                        validLinksNo++;
                     }
                 }
 
-                System.out.println("Added " + validLinks + " new URLs to queue");
+                System.out.println("Added " + validLinksNo + " new URLs to queue");
 
             } catch (Exception e) {
-                System.err.println("Error crawling " + currentUrl + ": " + e.getMessage());
+                System.err.println("Error crawling " + currentURL + ": " + e.getMessage());
             }
         }
     }
 
-    private String normalizeUrl(String url) {
-        return url.split("#")[0].split("\\?")[0];
+    public void printCrawledURLs () {
+        System.out.println("\nCrawled Pages:");
+        this.visitedURLs.forEach(url ->
+                System.out.println("→ " + url));
     }
 
-    private boolean isValidArticle(String url) {
-        // Check basic Wikipedia structure
-        if (!url.startsWith("https://en.wikipedia.org/wiki/")) {
+
+
+    private String normalizeURL(String URL) {
+        //remove any fragments or query parameters from the url
+        URL = URL.split("#")[0].split("\\?")[0];
+        return URL;
+    }
+
+    private boolean isValidArticle(String URL) {
+        // Check if the URL references a Wikipedia article or not
+        String wikipediaArticle_URLPrefix = "https://en.wikipedia.org/wiki/";
+        if (!URL.startsWith(wikipediaArticle_URLPrefix)) {
             return false;
         }
 
-        // Extract the part after /wiki/
-        String pagePart = url.substring("https://en.wikipedia.org/wiki/".length());
+        // Extract the part after /wiki/ (article name)
+        String pagePart = URL.substring(wikipediaArticle_URLPrefix.length());
 
-        // Exclude pages contain colons IN THE PAGE NAME
-        return !pagePart.contains(":") &&           // Exclude special pages
-                !pagePart.contains("#") &&           // Exclude fragments
-                !pagePart.matches(".*\\.(jpg|png|pdf|svg)$");  // Exclude files
-    }
-    public Set<String> getVisitedUrls() {
-        return visitedUrls;
+        // Return true if the URL is of a normal article, which is, it's not any of the following:
+        return !pagePart.contains(":") &&                                   // Exclude special pages
+                !pagePart.contains("#") &&                                  // Exclude fragments
+                !pagePart.matches(".*\\.(jpg|png|pdf|svg)$");         // Exclude files
     }
 }

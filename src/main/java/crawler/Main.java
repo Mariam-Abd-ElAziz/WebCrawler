@@ -9,9 +9,6 @@ public class Main {
 
         WebCrawler crawler = new WebCrawler(seedUrls);
         crawler.startCrawling();
-
-        System.out.println("\nCrawled Pages:");
-        crawler.getVisitedUrls().forEach(url ->
-                System.out.println("→ " + url));
+        crawler.printCrawledURLs();
     }
 }
