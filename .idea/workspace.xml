@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28f97d49-3bc9-42ad-8d00-be65e06dd299" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/crawler/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/crawler/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/crawler/WebCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/crawler/WebCrawler.java" afterDir="false" />
-    </list>
+    <list default="true" id="28f97d49-3bc9-42ad-8d00-be65e06dd299" name="Changes" comment="build invertedindex" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,7 +37,6 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/College/IR/asses/ass2/WebCrawler",
     "node.js.detected.package.eslint": "true",
@@ -53,14 +48,15 @@
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
       </set>
     </attachedChunks>
   </component>
@@ -75,6 +71,7 @@
       <workItem from="1745516646337" duration="680000" />
       <workItem from="1745517744326" duration="2519000" />
       <workItem from="1745517175203" duration="2438000" />
+      <workItem from="1745592857368" duration="6397000" />
     </task>
     <servers />
   </component>
@@ -96,7 +93,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/crawler/WebCrawler.java</url>
-          <line>58</line>
+          <line>69</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

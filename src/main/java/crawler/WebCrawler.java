@@ -1,5 +1,8 @@
 package crawler;
 
+import invertedIndex.Posting;
+import invertedIndex.InvertedIndex;
+import invertedIndex.SourceRecord;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,6 +16,8 @@ public class WebCrawler {
     private final Set<String> visitedURLs = new HashSet<>();
     private final Queue<String> URLsQueue = new LinkedList<>();
     private int crawledPagesCount = 0;
+    private InvertedIndex invertedIndex=new InvertedIndex();
+    private final Map<Integer, SourceRecord> docRecords = new HashMap<>();
 
 
 
@@ -44,8 +49,14 @@ public class WebCrawler {
                 //reflect the successful URL visit
                 visitedURLs.add(currentURL);
                 crawledPagesCount++;
+                int docId = crawledPagesCount;
                 System.out.println("✅ Crawled (" + crawledPagesCount + "/" + MAX_CRAWLED_PAGES_NO + "): " + currentURL);
+                // Extract text and tokenize
+                String text = doc.body().text();
+                SourceRecord record = new SourceRecord(docId, currentURL, text);
+                docRecords.put(docId, record);
 
+                invertedIndex.processDocument(record,docId);
                 //get all the links in the main article content only
                 Elements linksInPage = doc.select("#mw-content-text a[href^='/wiki/']:not(.reference a)");
                 System.out.println("Found " + linksInPage.size() + " potential links");
@@ -57,6 +68,7 @@ public class WebCrawler {
                     URL = normalizeURL(URL);
 
                     if (isValidArticle(URL) && !visitedURLs.contains(URL)) {
+
                         URLsQueue.add(URL);
                         validLinksNo++;
                     }
@@ -68,6 +80,7 @@ public class WebCrawler {
                 System.err.println("Error crawling " + currentURL + ": " + e.getMessage());
             }
         }
+        invertedIndex.printInvertedIndex();
     }
 
     public void printCrawledURLs () {
