@@ -11,6 +11,31 @@ public class InvertedIndex {
         sources = new HashMap<Integer, SourceRecord>();
         invertedIndex = new HashMap<String, List<Posting>>();
     }
+    private static String removeSuffix(String word, String suffix) {
+        if (word.endsWith(suffix)) {
+            return word.substring(0, word.length() - suffix.length());
+        }
+        return word;
+    }
+
+    public static String stemWord(String word) {
+        if (word.length() <= 3) {
+            return word;
+        }
+
+        String[] suffixes = {"ation", "tion", "sion", "ible", "able", "ment", "ness", "fully", "edly", "ing", "ly", "ed", "es", "s"};
+
+        for (String suffix : suffixes) {
+            if (word.endsWith(suffix)) {
+                String stemmed = removeSuffix(word, suffix);
+                if (stemmed.length() >= 3) {
+                    return stemmed;
+                }
+            }
+        }
+
+        return word;
+    }
 
 
     public void printPostingList(Posting p) {
@@ -43,27 +68,28 @@ public class InvertedIndex {
         return false;
 
     }
-    public void processDocument(SourceRecord document,int documentId) {
+    public void processDocument(SourceRecord document, int documentId) {
+        // Tokenize the document content
         String[] tokens = document.getContent().toLowerCase().split("\\W+");
         Map<String, Integer> termFrequency = new HashMap<>();
 
-        // Calculate term frequency (TF)
+        // Calculate term frequency (TF) and apply stemming
         for (String token : tokens) {
-            if(stopWord(token)) continue;
+            if (stopWord(token)) continue;  // Skip stop words
+
+            // Stem the token
+            token = stemWord(token);
+
+            // Update term frequency map with stemmed token
             termFrequency.put(token, termFrequency.getOrDefault(token, 0) + 1);
         }
 
-        updateInvertedIndex(tokens, documentId);
+        // After processing the terms, update the inverted index
+        updateInvertedIndex(termFrequency, documentId);
     }
-    private void updateInvertedIndex(String[] tokens, int docId) {
-        Map<String, Integer> termFrequency = new HashMap<>();
 
-        // Calculate term frequency (TF)
-        for (String token : tokens) {
-            termFrequency.put(token, termFrequency.getOrDefault(token, 0) + 1);
-        }
-
-        // Update inverted index
+    private void updateInvertedIndex(Map<String, Integer> termFrequency, int docId) {
+        // Update inverted index with the term frequency map
         for (Map.Entry<String, Integer> entry : termFrequency.entrySet()) {
             String term = entry.getKey();
             int tf = entry.getValue();
@@ -73,6 +99,7 @@ public class InvertedIndex {
             invertedIndex.get(term).add(new Posting(docId, tf));
         }
     }
+
 
 
 
