@@ -22,14 +22,14 @@ public class TFIDFCalculator {
         double normDoc = 0.0;
         double normQuery = 0.0;
 
-        // Calculate dot product
+        // Calculate the dot product
         for (String term : queryVector.keySet()) {
             if (docVector.containsKey(term)) {
                 dotProduct += docVector.get(term) * queryVector.get(term);
             }
         }
 
-        // Calculate norms
+        // Calculate the norms
         for (double value : docVector.values()) {
             normDoc += value * value;
         }
@@ -37,9 +37,11 @@ public class TFIDFCalculator {
             normQuery += value * value;
         }
 
+        // Normalize
         normDoc = Math.sqrt(normDoc);
         normQuery = Math.sqrt(normQuery);
 
+        // Return the cosine similarity
         if (normDoc == 0.0 || normQuery == 0.0) {
             return 0.0;
         } else {
