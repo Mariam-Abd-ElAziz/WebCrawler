@@ -7,6 +7,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import crawler.TFIDFCalculator;
+import crawler.TFIDFCalculator.TermTF;
 import java.util.*;
 
 
@@ -112,4 +114,45 @@ public class WebCrawler {
                 !pagePart.contains("#") &&                                  // Exclude fragments
                 !pagePart.matches(".*\\.(jpg|png|pdf|svg)$");         // Exclude files
     }
+    public int getTotalDocumentCount() {
+        return crawledPagesCount;
+    }
+
+
+
+    // Method to get the term frequencies for all crawled documents
+    public Map<String, List<TermTF>> getTermFrequencies() {
+        Map<String, List<TermTF>> termFrequencies = new HashMap<>();
+
+        // Loop over each document and its term frequency map
+        for (Map.Entry<Integer, SourceRecord> entry : docRecords.entrySet()) {
+            SourceRecord record = entry.getValue();
+            String[] tokens = record.getContent().toLowerCase().split("\\W+");
+
+            // A map to store term frequencies for the current document
+            Map<String, Integer> termFrequency = new HashMap<>();
+
+            // Calculate term frequency (TF)
+            for (String token : tokens) {
+                if (stopWord(token)) continue;
+                termFrequency.put(token, termFrequency.getOrDefault(token, 0) + 1);
+            }
+
+            // For each term, create a TermTF object and add it to the list
+            for (Map.Entry<String, Integer> termEntry : termFrequency.entrySet()) {
+                String term = termEntry.getKey();
+                int tf = termEntry.getValue();
+
+                termFrequencies.putIfAbsent(term, new ArrayList<>());
+                termFrequencies.get(term).add(new TermTF(record.getId(), tf));
+            }
+        }
+
+        return termFrequencies;
+    }
+    boolean stopWord(String word) {
+        Set<String> stopWords = Set.of("the", "to", "be", "for", "from", "in", "a", "into", "by", "or", "and", "that");
+        return word.length() < 2 || stopWords.contains(word);
+    }
 }
+

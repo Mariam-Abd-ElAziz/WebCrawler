@@ -57,7 +57,7 @@ public class InvertedIndex {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
-    boolean stopWord(String word) {
+   public static boolean stopWord(String word) {
         if (word.equals("the") || word.equals("to") || word.equals("be") || word.equals("for") || word.equals("from") || word.equals("in")
                 || word.equals("a") || word.equals("into") || word.equals("by") || word.equals("or") || word.equals("and") || word.equals("that")) {
             return true;
