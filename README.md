@@ -40,20 +40,6 @@ git clone https://github.com/your-username/WebCrawler.git
 ```
 4. Build project: `mvn clean install`
 
-## Documentation 📄
-### Technical Report Includes:
-- Crawler design decisions
-- Inverted index implementation details
-- TF-IDF and cosine similarity formulas
-- Challenges and solutions
-- Performance evaluation
-
-### User Manual:
-- Installation guide
-- Runtime instructions
-- Query format specifications
-- Output interpretation
-
 ## Implementation Details 🔍
 - **Web Crawler**: BFS with URL normalization
 - **Text Processing**: Tokenization and case normalization
