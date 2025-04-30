@@ -1,5 +1,8 @@
 package crawler;
 
+import invertedIndex.InvertedIndex;
+import invertedIndex.SourceRecord;
+
 import java.util.*;
 
 public class Main {
@@ -14,12 +17,13 @@ public class Main {
         crawler.printCrawledURLs();
         Map<String, List<TFIDFCalculator.TermTF>> tfData = crawler.getTermFrequencies();
         int N = crawler.getTotalDocumentCount();
-
+        InvertedIndex invertedIndex=crawler.getInvertedIndex();
+        Map<Integer, SourceRecord> sources= invertedIndex.sources;
         Map<Integer, Map<String, Double>> tfidfVectors = TFIDFCalculator.computeTfidfVectors(tfData, N);
         for (Map.Entry<Integer, Map<String, Double>> entry : tfidfVectors.entrySet()) {
             int docId = entry.getKey();
             Map<String, Double> tfidfVector = entry.getValue();
-            System.out.println("DocID: " + docId + " TF-IDF Vector: " + tfidfVector);
+            //  System.out.println("DocID: " + docId + " TF-IDF Vector: " + tfidfVector);
         }
         QueryProcessor queryProcessor = new QueryProcessor(tfidfVectors, tfData, N);
 
@@ -43,13 +47,18 @@ public class Main {
             } else {
                 System.out.println("Top matching documents:");
                 for (QueryProcessor.Result result : results) {
-                    System.out.println("Document ID: " + result.docId + " ,Score: " + result.score);
+                    SourceRecord source = sources.get(result.docId);
+
+                    System.out.println("URL: " + source.URL+" ,DocID: " + result.docId +" ,Score: " + result.score);
+
                 }
             }
+
         }
+
 
         scanner.close();
     }
 
- }
+}
 

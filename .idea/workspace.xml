@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28f97d49-3bc9-42ad-8d00-be65e06dd299" name="Changes" comment="update stemmer">
-      <change afterPath="$PROJECT_DIR$/src/main/java/invertedIndex/Stemmer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/invertedIndex/InvertedIndex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/invertedIndex/InvertedIndex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/crawler/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/crawler/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/crawler/QueryProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/crawler/QueryProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/crawler/TFIDFCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/crawler/TFIDFCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/crawler/WebCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/crawler/WebCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/invertedIndex/Stemmer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/invertedIndex/Stemmer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +60,19 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -81,6 +97,7 @@
       <workItem from="1745871958361" duration="1997000" />
       <workItem from="1746026975356" duration="2334000" />
       <workItem from="1746036347783" duration="946000" />
+      <workItem from="1746046532050" duration="347000" />
     </task>
     <task id="LOCAL-00001" summary="build invertedindex">
       <option name="closed" value="true" />
@@ -111,7 +128,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/crawler/Main.java</url>
-          <line>11</line>
+          <line>14</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

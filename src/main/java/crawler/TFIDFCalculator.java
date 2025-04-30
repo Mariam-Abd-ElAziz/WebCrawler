@@ -9,9 +9,9 @@ public class TFIDFCalculator {
         return tf > 0 ? 1 + Math.log10(tf) : 0;
     }
 
-    // Compute the IDF (Inverse Document Frequency) for a given term
+    // Compute the smoothed IDF (Inverse Document Frequency)
     public static double computeIdf(int N, int df) {
-        return df > 0 ? Math.log10((double) N / df) : 0;
+        return df > 0 ? Math.log10(1.0 + (double) N / df) : 0;
     }
 
     // Compute the TF-IDF score by multiplying TF weight with IDF
@@ -25,7 +25,6 @@ public class TFIDFCalculator {
         double normDoc = 0.0;
         double normQuery = 0.0;
 
-        // Calculate the dot product and norms
         for (String term : queryVector.keySet()) {
             if (docVector.containsKey(term)) {
                 dotProduct += docVector.get(term) * queryVector.get(term);
@@ -42,12 +41,7 @@ public class TFIDFCalculator {
         normDoc = Math.sqrt(normDoc);
         normQuery = Math.sqrt(normQuery);
 
-        // If any vector has zero magnitude, return 0 similarity
-        if (normDoc == 0.0 || normQuery == 0.0) {
-            return 0.0;
-        } else {
-            return dotProduct / (normDoc * normQuery);
-        }
+        return (normDoc == 0.0 || normQuery == 0.0) ? 0.0 : dotProduct / (normDoc * normQuery);
     }
 
     // Compute the TF-IDF vectors for all documents
@@ -56,17 +50,14 @@ public class TFIDFCalculator {
         Map<String, Double> idf = new HashMap<>();
         Map<Integer, Map<String, Double>> docVectors = new HashMap<>();
 
-        // Calculate document frequency (DF) for each term
         for (String term : tfData.keySet()) {
             df.put(term, tfData.get(term).size());
         }
 
-        // Calculate inverse document frequency (IDF) for each term
         for (String term : df.keySet()) {
             idf.put(term, computeIdf(N, df.get(term)));
         }
 
-        // For each term, calculate the TF-IDF for each document
         for (String term : tfData.keySet()) {
             List<TermTF> postings = tfData.get(term);
             for (TermTF posting : postings) {
@@ -74,7 +65,6 @@ public class TFIDFCalculator {
                 int tf = posting.tf;
                 double tfidf = computeTfidf(tf, idf.get(term));
 
-                // Create a map for each document if not present and add the term's TF-IDF
                 docVectors.putIfAbsent(docId, new HashMap<>());
                 docVectors.get(docId).put(term, tfidf);
             }
@@ -83,7 +73,7 @@ public class TFIDFCalculator {
         return docVectors;
     }
 
-    //TermTF class to store term frequency (TF) and associated document ID
+    // Helper class for term frequency in a document
     public static class TermTF {
         public int docId;
         public int tf;

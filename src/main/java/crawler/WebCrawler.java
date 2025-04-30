@@ -19,7 +19,7 @@ public class WebCrawler {
     private final Queue<String> URLsQueue = new LinkedList<>();
     private int crawledPagesCount = 0;
     private InvertedIndex invertedIndex=new InvertedIndex();
-    private final Map<Integer, SourceRecord> docRecords = new HashMap<>();
+    private final Map<Integer, SourceRecord> docRecords = invertedIndex.sources;
 
 
 
@@ -114,6 +114,7 @@ public class WebCrawler {
                 !pagePart.contains("#") &&                                  // Exclude fragments
                 !pagePart.matches(".*\\.(jpg|png|pdf|svg)$");         // Exclude files
     }
+
     public int getTotalDocumentCount() {
         return crawledPagesCount;
     }
@@ -153,6 +154,9 @@ public class WebCrawler {
     boolean stopWord(String word) {
         Set<String> stopWords = Set.of("the", "to", "be", "for", "from", "in", "a", "into", "by", "or", "and", "that");
         return word.length() < 2 || stopWords.contains(word);
+    }
+    public InvertedIndex getInvertedIndex(){
+        return invertedIndex;
     }
 }
 

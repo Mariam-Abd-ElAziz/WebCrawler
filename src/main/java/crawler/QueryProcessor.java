@@ -47,6 +47,7 @@ public class QueryProcessor {
         for (int docId : docVectors.keySet()) {
             Map<String, Double> docVector = docVectors.get(docId);
             double score = TFIDFCalculator.cosineSimilarity(docVector, queryVector);
+
             if (score > 0) {
                 results.add(new Result(docId, score));
             }
@@ -61,10 +62,12 @@ public class QueryProcessor {
     public static class Result {
         public int docId;
         public double score;
+        public String url;
 
         public Result(int docId, double score) {
             this.docId = docId;
             this.score = score;
+
         }
     }
 }
