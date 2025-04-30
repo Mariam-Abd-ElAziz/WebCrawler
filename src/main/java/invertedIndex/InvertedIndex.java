@@ -19,22 +19,12 @@ public class InvertedIndex {
     }
 
     public static String stemWord(String word) {
-        if (word.length() <= 3) {
-            return word;
-        }
 
-        String[] suffixes = {"ation", "tion", "sion", "ible", "able", "ment", "ness", "fully", "edly", "ing", "ly", "ed", "es", "s"};
+        Stemmer s = new Stemmer();
+        s.addString(word);
+        s.stem();
+        return s.toString();
 
-        for (String suffix : suffixes) {
-            if (word.endsWith(suffix)) {
-                String stemmed = removeSuffix(word, suffix);
-                if (stemmed.length() >= 3) {
-                    return stemmed;
-                }
-            }
-        }
-
-        return word;
     }
 
 
@@ -57,7 +47,7 @@ public class InvertedIndex {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
-   public static boolean stopWord(String word) {
+    public static boolean stopWord(String word) {
         if (word.equals("the") || word.equals("to") || word.equals("be") || word.equals("for") || word.equals("from") || word.equals("in")
                 || word.equals("a") || word.equals("into") || word.equals("by") || word.equals("or") || word.equals("and") || word.equals("that")) {
             return true;
